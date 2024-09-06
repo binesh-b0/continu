@@ -26,6 +26,10 @@ pub enum Commands {
         email: String,
         password: String,
     },
+    Signup {
+        email: String,
+        password: String,
+    },
     /// Logout from the current session
     Logout {},
     /// Check login status
@@ -43,6 +47,9 @@ pub enum Commands {
 /// Handle the parsed CLI command
 pub async fn handle_command(cli: &Cli) {
     match &cli.command {
+        Commands::Signup { email, password } => {
+            auth::sign_up(email, password).await.unwrap();
+        }
         Commands::Login { email, password } => {
             auth::login(email, password).await.unwrap();
         }

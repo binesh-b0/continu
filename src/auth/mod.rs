@@ -123,3 +123,28 @@ pub async fn password_reset(email: &str) -> Result<(), Box<dyn Error>> {
 
     Ok(())
 }
+/// Sign up a new user using Supabase Auth
+pub async fn sign_up(email: &str, password: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let client = reqwest::Client::new();
+    let supabase_url = std::env::var("SUPABASE_URL")?;
+    let supabase_key = std::env::var("SUPABASE_KEY")?;
+    let sign_up_url = format!("{}/auth/v1/signup", supabase_url);
+
+    let response = client
+        .post(&sign_up_url)
+        .header("apikey", supabase_key)
+        .json(&serde_json::json!({
+            "email": email,
+            "password": password
+        }))
+        .send()
+        .await?;
+
+    if response.status().is_success() {
+        println!("Successfully signed up. Please log in.");
+    } else {
+        println!("Sign-up failed: {}", response.text().await?);
+    }
+
+    Ok(())
+}

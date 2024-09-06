@@ -1,14 +1,17 @@
 use dotenv::dotenv;
-use clap::Parser;
+use std::error::Error;
 
-mod cli;
 mod auth;
 mod backup;
 mod restore;
+mod menu;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn Error>> {
     dotenv().ok();  // Load environment variables from .env
-    let cli = cli::Cli::parse();  // Parse the CLI commands
-    cli::handle_command(&cli).await;  // Delegate command handling to the cli module
+    
+    // Show the dashboard (interactive menu)
+    menu::show_dashboard().await?;
+    
+    Ok(())
 }
