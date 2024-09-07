@@ -2,6 +2,9 @@ use clap::{Parser, Subcommand};
 use crate::auth;
 use nix::unistd::Uid;
 
+pub mod menu;
+pub mod print_to_dashboard;
+
 use crate::backup;
 use crate::restore;
 
@@ -68,7 +71,7 @@ pub async fn handle_command(cli: &Cli) {
                 return;
             }
             if auth::is_logged_in() {
-                backup::backup_files().await.unwrap();
+                backup::backup_system().await.unwrap();
             } else {
                 println!("Please log in first.");
             }
